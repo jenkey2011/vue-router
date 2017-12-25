@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <script src="../libs/js/vue-router.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <p>
+            <router-link to="/user/jenkey">Home</router-link>
+            <router-link to="/user/jenkey/profile">profile</router-link>
+            <router-link to="/user/jenkey/posts">posts</router-link>
+        </p>
+        <router-view></router-view>
+        <div>
+            <button @click='GoToPosts'>GoToPosts</button>
+            <button @click='go'>Go back 1 step</button>
+
+        </div>
+    </div>
+    <script>
+        const User = {
+            template: `
+                <div> 
+                    <h2>User - {{ $route.params.id }}</h2>
+                    <router-view></router-view>
+                </div>
+            `
+        }
+
+        const UserHome = {
+            template: '<div>Home</div>'
+        }
+        const UserProfile = {
+            template: '<div>Profile</div>'
+        }
+        const UserPosts = {
+            template: '<div>Posts</div>'
+        }
+
+
+        const router = new VueRouter({
+            routes: [
+                // 动态路径参数 以冒号开头
+                {
+                    path: '/user/:id',
+                    component: User,
+                    children: [{
+                            path: 'profile',
+                            component: UserProfile
+                        },
+                        {
+                            path: 'posts',
+                            component: UserPosts
+                        },
+                        {
+                            path: '',
+                            component: UserHome
+                        }
+                    ]
+                }
+            ]
+        })
+        const app = new Vue({
+            router,
+            methods:{
+                GoToPosts:function(){
+                    router.push({path:'/user/jenkey/posts'})
+                },
+                go:function(){
+                    router.go(-1)
+                }
+            }
+        }).$mount('#app')
+    </script>
+</body>
+
+</html>
