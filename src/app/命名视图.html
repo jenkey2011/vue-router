@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <script src="../libs/js/vue-router.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <h1>Hello App!</h1>
+        <p>
+            <router-link to="/abc">letter</router-link>
+            <router-link to="/cba">reverse</router-link>
+        </p>
+        <router-view></router-view>
+        <router-view name="b"></router-view>
+        <router-view name="c"></router-view>
+
+    </div>
+    <script>
+        const temp_a = { template:'<div>A</div>'}
+        const temp_b = { template:'<div>B</div>'}
+        const temp_c = { template:'<div>C</div>'}
+
+        const router = new VueRouter({
+            mode: 'history',
+            routes:
+                [
+                    {
+                        path: '/abc',
+                        components: {
+                            default: temp_a,
+                            b: temp_b,
+                            c: temp_c
+                        }
+                    },
+                    {
+                        path: '/cba',
+                        components: {
+                            default: temp_c,
+                            b: temp_b,
+                            c: temp_a
+                        }
+                    },
+
+                ]
+        })
+
+        new Vue({
+            router,
+            el:'#app'
+        })
+    </script>
+</body>
+
+</html>
