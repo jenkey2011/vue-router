@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="../static/css/style.css">
+  <script charset="utf-8" src='../libs/js/vue.js'></script>
+</head>
+<body>
+    <style>
+    
+    li{
+        margin-bottom: 10px;
+    }
+    </style>
+  <div id="app">
+		<h2>Latest Vue.js Commits</h2>
+		<template v-for='branch in branchs'>
+			<input 
+				type="radio" 
+				:id="branch"
+				:value="branch"
+				name="branch"
+				v-model="currentBranch"
+			>
+			<label :for="branch">{{ branch }}</label>
+		</template>
+		<p> vuejs/vue@{{ currentBranch }} </p>
+		<ul>
+			<li
+				v-for='commit in commits'
+			>
+				<span > {{ commit.sha.slice(0,6) }}  </span> - 
+                {{ commit.commit.message }} <br>
+                by <b> {{ commit.commit.author.name }} </b> at
+                <b>{{ commit.commit.author.date | filterDate }}</b>
+			</li>
+		</ul>
+  </div>
+  <script charset="utf-8" src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+  <script charset="utf-8">
+  	var apiUrl = 'https://api.github.com/repos/vuejs/vue/commits?per_page=5&sha=';
+  	var app = new Vue({
+  	
+  		el: '#app',
+
+  		data:{
+  			branchs:['master','dev'],
+  			currentBranch:'master',
+  			commits:null
+  		},
+
+  		created: function(){
+            this.getCommits()
+  		},
+        
+        watch: {
+            currentBranch: 'getCommits'
+        },
+          
+  		methods:{
+  			getCommits:function(){
+  				var vm = this;
+  				axios.get(apiUrl+vm.currentBranch)
+               .then(function(response){
+               	vm.commits = response.data
+               })
+               .catch(function(error){
+                vm.answer = 'Error! Could not reach the API.' + error;
+               })
+  			}
+          },
+          
+          filters:{
+              filterDate: function(value){
+                  return value.replace(/T|Z/g,' ')
+              }
+          }
+  		
+  	})
+  </script>
+</body>
+</html>

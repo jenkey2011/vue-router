@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <script charset="utf-8" src='../libs/js/vue.js'></script>
+</head>
+<body class="noselect">
+    <style >
+        html,body{
+            width: 100%;
+            height: 100%;
+        }
+        .modal-container{
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            position: fixed;
+            left: 0;
+            top: 0;
+            font-size: 16px;
+            line-height: 1.6;
+            display: flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items: center;
+            transition:opacity .3s ease;
+            
+        }
+        .modal-wrap{
+            width: 420px;
+            background: #fff;
+            padding: 20px 50px;
+            transition: all .3s ease;
+            box-shadow: 0 0 50px #888;
+        }
+        .modal-header{
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .modal-enter,.modal-leave-active{
+            opacity: 0;
+        }
+        .modal-enter .modal-wrap,
+        .modal-leave-active .modal-wrap{
+            transform: scale(1.1);
+            -webkit-transform: scale(1.1);
+        }
+        /* .v-enter-active{
+            opacity: 1;
+        } */
+    </style>
+    <script type="text/x-template" id="modal">
+        <transition name="modal">
+            <div class="modal-container">
+                <div class="modal-wrap">
+                    <div class="modal-header">
+                        <slot name='mo_header'>
+                            This is the default modal header
+                        </slot>
+                    </div>
+                    <div class="modal-body">
+                        <slot name="mo_body">
+
+                            This is the default modal body
+                        </slot>
+                    </div>
+                    <div class="modal-footer">
+                        <slot name="mo_footer">
+                            This is the default modal footer
+                        </slot>
+                        <button @click="$emit('close')">OK</button>
+                    </div>
+                </div>
+            </div>
+        </transition>
+    </script>
+    <div id="demo">
+        <button @click="open = true">show modal</button> 
+        <modal v-if="open" @close=" open = false ">
+            <h3 slot="mo_header">This is costom header</h3>
+        </modal>
+    </div>
+    <script>
+        Vue.component('modal', {
+            props:[],
+            template:'#modal'
+        })
+        new Vue({
+            el:'#demo',
+            data:{
+                open:false
+            }
+        })
+    </script>
+</body>
+</html>

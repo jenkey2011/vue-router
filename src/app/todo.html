@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script charset="utf-8" src='../libs/js/vue.js'></script>
+    <style>
+        .noselect { -webkit-touch-callout: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+
+        li{
+            transition: all 3s;
+            position: relative;
+        }
+        li span.active{
+            text-decoration: line-through;
+            color: #999;
+        }
+        li input{
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            display: none;
+        }
+        li.editing input{
+            display: block;
+        }
+    </style>
+</head>
+<body class="noselect">
+    <div id="app">
+        <div class="input-wrap">
+            <input type="text" v-model='newTodo' @keyup.enter="addNewlist">
+            <button @click.prevent="addNewlist" >添加</button>
+        </div>
+        <div class="main" v-show="todos.length">
+            <ul >
+                <li v-for=" (todo,index) in filterTodos" 
+                :key="todo.id" 
+                :class="{ editing : todo == editTodo }">
+                    <span 
+                        @click=" todo.complete = !todo.complete;" 
+                        @dblclick="edit(todo)"
+                        :class="{ active : todo.complete }">{{ todo.title }}</span>
+                    <button @click.prevent="removeTodo(index)">X</button>
+                    <input type="text" v-model="todo.title" 
+                    @keyup.enter="doneEdit(todo)"
+                    @blur="doneEdit(todo)"
+                    @keyup.esc="cancalEdit(todo)"
+                    v-focus = "todo == editTodo"
+                    >
+                </li>
+            </ul>
+            <div class="info">
+                剩余{{ remaining }}<br/>
+                完成{{ done }}
+            </div>
+            <div class="btn-wrap">
+                <button @click="select('all')">全部事项</button>
+                <button @click="select('completed')">已完成</button>
+                <button @click="select('need')">代办事项</button>
+                <button @click="completeAll">全部完成</button>
+                <button @click="removeCompleted">清除已完成</button>
+                <button @click="removeAll">移除所有</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        var log = console.log.bind('log');
+
+        var STORAGE_KEY = 'todo-lists';
+        var todoStorage = {
+            fetch: function(){
+                var todos = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+                todos.forEach((todo,index) => {
+                    todo.id = index;
+                });
+                todoStorage.uid = todos.length;
+                return todos;
+            },
+            save: function(todos){
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(todos))
+            }
+        } 
+
+        var filter = {
+            'all':function(todos){
+                return todos;
+            },
+            'completed':function(todos){
+                return todos.filter(function(todo){
+                    return todo.complete;
+                })
+            },
+            'need':function(todos){
+                return todos.filter(function(todo){
+                    return !todo.complete;
+                })
+            }
+        }
+        
+        new Vue({
+            el:'#app',
+            data:{
+                newTodo:'',
+                todos: todoStorage.fetch(),
+                visibility: 'all',
+                editTodo: null
+            },
+            watch:{
+                todos: {
+                    handler: function(todos){
+                        todoStorage.save(todos)
+                    },
+                    deep:true
+                }
+            },
+            methods:{
+                addNewlist:function(){
+                    var now = new Date();
+                    if(this.newTodo.trim().length){
+                        this.todos.push({
+                            id:todoStorage.uid++,
+                            title:this.newTodo + '====' + now.toLocaleString() ,
+                            complete:false
+                        });
+                        todoStorage.save();
+                        this.newTodo = '';
+                    }
+
+                },
+                removeTodo:function(index){
+                    this.todos.splice(index,1)
+                },
+                togglecomplete:function(todo){
+                    todo.complete = !todo.complete;
+                },
+                removeAll:function(){
+                    this.todos = [];
+                },
+                select:function(str){
+                    this.visibility = str;
+                },
+                completeAll:function(){
+                    this.todos.forEach(function(todo){
+                        todo.complete = true;
+                    })
+                },
+                removeCompleted: function(){
+                    this.todos = this.todos.filter(function(todo){
+                        return !todo.complete;
+                    })
+                },
+                edit:function(todo){
+                    this.oldTodo = todo.title;
+                    this.editTodo = todo;
+                },
+                doneEdit: function(todo){
+                    if(!this.editTodo){
+                        return;
+                    }
+                    this.editTodo = null;
+                    todo.title = todo.title.trim();
+                    if(!todo.title){
+                        this.todos.splice(this.todos.indexOf(todo),1)
+                    }
+                },
+                cancalEdit:function(todo){
+                    this.editTodo = null;
+                    todo.title = this.oldTodo;
+                }
+
+            },
+            computed:{
+                remaining:function(){
+                    return this.todos.filter(function(todo){
+                        return !todo.complete
+                    }).length;
+                },
+                done: function(){
+                    return this.todos.filter(function(todo){
+                        return todo.complete
+                    }).length;
+                },
+                filterTodos:function(){
+                    return filter[this.visibility](this.todos)
+                }
+            },
+            directives:{
+                'focus':function(el,binding){
+                    if(binding.value){
+                        el.focus();
+                    }
+                }
+            }
+        })
+    </script>
+</body>
+</html>

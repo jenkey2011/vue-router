@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="../static/css/style.css">
+  <script charset="utf-8" src='../libs/js/vue.js'></script>
+
+</head>
+<body>
+  <div id="app-1">
+    <div v-if="ok">Yes</div>
+    <div v-else>No</div>
+    <hr>
+    <div v-if="Math.random() > 0.5">
+      Now you see me
+    </div>
+    <div v-else>
+      Now you don't
+    </div>
+    <hr>
+    <div v-if="type === 'A'">
+      A
+    </div>
+    <div v-else-if="type === 'B'">
+      B
+    </div>
+    <div v-else-if="type === 'C'">
+      C
+    </div>
+    <div v-else>
+      Not A/B/C
+    </div>
+  </div>
+
+  <script charset="utf-8">
+    var app1 = new Vue({
+    
+      el: "#app-1",
+      data:{
+        ok:true,
+        type:'B'
+      }
+      
+    })
+  </script>
+
+  <hr>
+  <h4>key 管理可复用的元素</h4>
+  <div id="app-2">
+    <template v-if="loginType === 'username'">
+      <label>Username</label>
+      <input placeholder="Enter your username">
+    </template>
+    <template v-else>
+      <label>Email</label>
+      <input placeholder="Enter your email address">
+    </template>
+    <button @click="toggleLoginType"> toggle login type </button>
+  </div>
+  
+  <script charset="utf-8">
+    var app2 = new Vue({
+    
+      el: "#app-2",
+      data:{
+        loginType:'username'
+      },
+      methods:{
+        toggleLoginType:function () {
+          return this.loginType = this.loginType === 'username' ? 'email' : 'username';
+        }
+      }
+    
+    })
+  </script>
+
+  <h5>用key</h5>
+
+  <div id="app-3">
+    <template v-if="loginType === 'username'">
+      <label>Username</label>
+      <input placeholder="Enter your username" key='userInput'>
+    </template>
+    <template v-else>
+      <label>Email</label>
+      <input placeholder="Enter your email address" key='emailInput'>
+    </template>
+    <button @click="toggleLoginType"> toggle login type </button>
+  </div>
+  
+  <script charset="utf-8">
+    var app3 = new Vue({
+    
+      el: "#app-3",
+      data:{
+        loginType:'username'
+      },
+      methods:{
+        toggleLoginType:function () {
+          return this.loginType = this.loginType === 'username' ? 'email' : 'username';
+        }
+      }
+    
+    })
+  </script>
+  <hr>
+
+  <h4> v-show </h4>
+
+  <div id="app-4">
+    <div v-show='ok'> this is a example of 'v-show' </div>
+  </div>
+
+  <script charset="utf-8">
+    var app4 = new Vue({
+    
+      el: "#app-4",
+      data:{
+        ok:1
+      }
+    
+    })
+  </script>
+</body>
+</html>

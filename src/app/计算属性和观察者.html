@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="../static/css/style.css">
+  <script charset="utf-8" src='../libs/js/vue.js'></script>
+
+</head>
+<body>
+  <h2>计算属性</h2>
+  <div id="demo1">
+    <p> Original message：{{ message }} </p>
+    <p> Original message：{{ reversedMessage }} </p>
+    <p> Time now ：{{ now }} </p>
+
+  </div>
+  <script charset="utf-8">
+    var app1 = new Vue({
+      el:'#demo1',
+      data:{
+        message:'Hello Vue.js!'
+      },
+      computed:{
+        reversedMessage:function () {
+          return this.message.split('').reverse('').join('');
+        },
+        now:function  (argument) {
+          return Date.now();
+        }
+      }
+    })
+  </script>
+  <hr>
+  <h4>观察者模式</h4>
+  <div id="app-2">
+    <p>
+      ask a yes/no question:
+      <input type="text" v-model='question'>
+    </p>
+    <p>{{ answer }}</p>
+    <img :src="imgSrc" alt="">
+  </div>
+    <style>
+      img{
+        max-width: 300px;
+        height: auto;
+      }
+    </style>
+  <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+  <script charset="utf-8">
+    var watchExampleVM = new Vue({
+      el:'#app-2',
+      data:{
+        question:'',
+        answer: 'I cannot give you an answer untill you ask a question!',
+        imgSrc:''
+      },
+      watch:{
+        // 如果question 发生改变，这个函数就会运行
+        question: function (newQusetion) {
+          this.answer = 'Waiting for you to stop typing……',
+          this.getAnswer();
+        } 
+      },
+      methods: {
+        getAnswer: _.debounce(
+          function () {
+            if(this.question.indexOf('?') === -1){
+              this.answer = 'Question usually contain a question mark. ;-)';
+              return;
+            }
+            this.answer = 'thing……';
+            var vm = this;
+            axios.get('https://yesno.wtf/api')
+                 .then(function(response){
+                  vm.answer = response.data.answer;
+                  vm.imgSrc = response.data.image;
+                 })
+                 .catch(function(error){
+                  vm.answer = 'Error! Could not reach the API.' + error;
+                 })
+          },500)
+      }
+    })
+  </script>
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="../static/css/style.css">
+  <script charset="utf-8" src='../libs/js/vue.js'></script>
+
+</head>
+<body>
+	<ul id="app-1">
+		<li v-for='item in items'>
+			{{ item.message }}
+		</li>
+	</ul>
+	<script charset="utf-8">
+		var app1 = new Vue({
+		
+			el: "#app-1",
+			data:{
+				items:[
+					{message: 'foo'},
+					{message: 'bar'},
+					{message: 'foo bar'}		
+				]
+			}
+		
+		})
+	</script>
+
+  <ul id="app-2">
+    <li v-for='(item,index) in items'>
+      {{ parentMessage }} - {{ index }} - {{ item.message }} 
+    </li>
+  </ul>
+  <script charset="utf-8">
+    var app2 = new Vue({
+    
+      el: "#app-2",
+      data:{
+        parentMessage:'todo',
+        items:[
+          {message: 'foo'},
+          {message: 'bar'},
+          {message: 'foo bar'}    
+        ]
+      }
+    
+    })
+  </script>
+  
+  <hr>
+
+  <h4>一个对象的v-for</h4>
+  <h5>键值</h5>
+  <ul id="app-3">
+    <li v-for='value in object'>
+      {{value}}
+    </li>
+  </ul>
+  <script charset="utf-8">
+    var app3 = new Vue({
+    
+      el: "#app-3",
+      data:{
+        object:{
+          firstName:'John',
+          lastName:'Doe',
+          age:38
+        }
+      }
+    
+    })
+  </script>
+  <h5> 键值  键  </h5>
+    <ul id="app-4">
+    <li v-for='(value,key) in object'>
+     {{key}} : {{value}}
+    </li>
+  </ul>
+  <script charset="utf-8">
+    var app4 = new Vue({
+    
+      el: "#app-4",
+      data:{
+        object:{
+          firstName:'John',
+          lastName:'Doe',
+          age:38
+        }
+      }
+    
+    })
+  </script>
+
+   <h5> 键值  键  索引</h5>
+    <ul id="app-5">
+    <li v-for='(value,key,index) in object'>
+      {{index}} - {{key}} : {{value}}
+    </li>
+  </ul>
+  <script charset="utf-8">
+    var app5 = new Vue({
+    
+      el: "#app-5",
+      data:{
+        object:{
+          firstName:'John',
+          lastName:'Doe',
+          age:38
+        }
+      }
+    
+    })
+  </script>
+
+  <h5> 绑定 key 值</h5>
+  <ul id="app-6">
+    <li v-for='(value,key,index) in object' >
+      {{index}} - {{key}} : {{value}}
+    </li>  
+    <button @click='changeTheObject'> toggle the name </button>
+  </ul>
+  
+  <script charset="utf-8">
+    var app6 = new Vue({
+    
+      el: "#app-6",
+      data:{
+        count:0,
+        object:{
+          firstName:'John',
+          lastName:'Doe',
+          age:38,
+          id:0
+        }
+      },
+      methods:{
+        changeTheObject:function () {
+          this.count++;
+          return this.object = this.count % 2 == 0 ? {firstName:'John',lastName:'Doe',age:38,id:0} : {lastName:'qizheng',firstName:'wang',age:25,id:1}
+        }
+      }
+    
+    })
+  </script>
+  
+  <hr>
+
+  <h4>数组更新</h4>
+  <ul id="app-7">
+    <li v-for='item in items'>
+      {{ item.message }}
+    </li>
+    <button @click='pushSomething'>pushSomething</button>
+  </ul>
+  <script charset="utf-8">
+    var app7 = new Vue({
+    
+      el: "#app-7",
+      data:{
+        items:[
+          {message: 'foo'},
+          {message: 'bar'},
+          {message: 'foo bar'}    
+        ]
+      },
+      methods:{
+        pushSomething:function(){
+          this.items.push({message:'andSomething'})
+        }
+      }
+    
+    })
+  </script>
+  
+  <ul id="app-10">
+    <li v-for='n in evenNumbers'>{{n}}</li>
+  </ul>
+
+  <script charset="utf-8">
+    var app10 = new Vue({
+    
+      el: "#app-10",
+      data:{
+        numbers:[1,2,3,4,5,6]
+      },
+      computed:{
+        evenNumbers: function(){
+          return this.numbers.filter(function(number){
+            return number % 2 === 0;
+          })
+        }
+      }
+    
+    })
+  </script>
+
+  <ul id="app-11">
+    <li v-for='n in evenNumbers(numbers)'>{{n}}</li>
+    <span v-for="n in 10">{{ n }} </span>
+  </ul>
+
+  <script charset="utf-8">
+    var app11 = new Vue({
+    
+      el: "#app-11",
+      data:{
+        numbers:[1,2,3,4,5,6]
+      },
+      methods:{
+        evenNumbers: function(numbers){
+          return this.numbers.filter(function(number){
+            return number % 2 === 1;
+          })
+        }
+      }
+    
+    })
+  </script>
+  <hr>
+  
+
+  <ul id="app-12">
+
+    <template v-for="item in items">
+      <li>{{ item.msg }}</li>
+      <li class="divider"></li>
+    </template>
+
+  </ul>
+  <script charset="utf-8">
+    var app12 = new Vue({
+    
+      el: "#app-12",
+      data:{
+        items:[
+          {message: 'foo'},
+          {message: 'bar'},
+          {message: 'foo bar'}    
+        ]
+      }
+    
+    })
+  </script>
+</body>
+</html>

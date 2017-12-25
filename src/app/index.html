@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>learn createJS</title>
+  <link rel="stylesheet" href="../static/css/style.css">
+  <style>
+		html, body { height: 100%; overflow: hidden; padding-bottom: 0;}
+
+		body { font-family: "Microsoft YaHei","\5fae\8f6f\96c5\9ed1"; font-size: 14px; width: 100%; padding-left: 300px; background: #fafcff; color: #405261; }
+
+		#slidebar { list-style-type: square; padding-left: 20px; width: 300px; height: 100%; overflow: auto; -webkit-box-shadow: 5px 5px 20px #666; box-shadow: 5px 5px 20px #666; position: fixed; left: 0; top: 0; margin-top: 0;}
+
+		#slidebar div { font-size: 18px; }
+
+		#slidebar li { list-style-type: square; font-size: 14px; height: 30px; line-height: 30px; }
+
+		#slidebar li a { color: #5082c0; }
+
+		#slidebar li a:hover { color: #a81407; text-decoration: underline; }
+
+		iframe { width: 100%; height: 100%; }
+
+  </style>
+</head>
+<body>
+  <ol id="slidebar">	
+    
+  </ol>
+  <iframe src="defaut.html" frameborder="0"  id="viewer" name="viewer"></iframe>
+</body>
+<script charset="utf-8" src="../static/js/main.js"></script>
+<script charset="utf-8">
+
+  window.onload = function () {
+  //  创建右侧菜单
+  var slidebar = document.querySelector('#slidebar');
+
+  var createSlidebar = function createSlidebar(data) {
+    var str = '';
+    for (var key in data) {
+      str += "<div>" + key + "</div>";
+      var thisList = data[key];
+      for (var i = 0, len = thisList.length; i < len; i++) {
+        str += "<li><a href=\"" + thisList[i] + ".html\" target=\"viewer\">" + thisList[i] + "</a></li>";
+      }
+    }
+    return str;
+  };
+
+  slidebar.addEventListener('click', function (e) {
+    var curTarget = e.target;
+    if (curTarget.tagName.toLowerCase() == 'a') {
+      var file = curTarget.getAttribute('href').replace('.html', '');
+      location.hash = file;
+    }
+  });
+
+  document.querySelector('#slidebar').innerHTML = createSlidebar(list);
+
+    var hash = location.hash;
+    var viewer = document.querySelector('#viewer');
+    if(hash.length > 0){
+      var file = hash.replace('#','');
+      loadFile( file ) ;
+    }
+    function loadFile( file ) {
+      viewer.src = file + '.html';
+    }
+  }
+
+</script>
+</html>

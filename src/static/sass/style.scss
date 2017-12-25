@@ -1,0 +1,121 @@
+@charset "UTF-8";
+
+// @import "sassCore/core/setting";
+// @import "sassCore/core/css3";
+// @import "sassCore/core/mixin";
+// @import "sassCore/core/reset";
+
+@mixin center_vh($width,$height){
+  width: $width;
+  height: $height;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -($width/2);
+  margin-top: -($height/2);
+}
+%center_img{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%,-50%,0);
+}
+.center_img{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%,-50%,0);
+}
+@mixin posa_lt($left:0,$top:0){
+  position: absolute;
+  left: $left;
+  top: $top;
+}
+@mixin posa_whlt($width,$height,$left:0,$top:0){
+  width: $width;
+  height: $height;
+  position: absolute;
+  left: $left;
+  top: $top;
+}
+
+%wh_100{
+  width: 100%;
+  height: 100%;
+}
+%posa_lt0{
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.hide{
+  display: none;
+}
+.full{
+  @extend %wh_100;
+  @extend %posa_lt0;
+}
+a{
+  text-decoration: none;
+  color: #333;
+  &:hover{
+    color: #f33;
+  }
+}
+.hide{
+  display: none!important;
+}
+.noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+*,*::after,*::before{
+  box-sizing: border-box;
+  -webkit-tap-highlight-color:rgba(0,0,0,0);
+  -webkit-tap-highlight-color:transparent;
+}
+
+
+input[type="button"], input[type="submit"], input[type="reset"] {
+
+-webkit-appearance: none;
+
+}
+
+textarea {  -webkit-appearance: none;}   
+
+
+html,body{
+  height: 100%;
+  overflow: auto;
+}
+
+body { 
+  font-family: "Microsoft YaHei","\5fae\8f6f\96c5\9ed1";
+  font-size: 14px; 
+  width: 100%;
+  background:#eaebee;
+  color: #405261;
+  padding-left: 5%;
+  padding-bottom: 100px;
+}
+
+
+div.demo{
+  padding: 20px;
+  border: 1px solid #eee;
+  margin: 5px;
+}
+h2{
+  font-size: 30px;
+  font-weight: bold;
+  border-bottom: 2px solid #ccc;
+}
+
+/**
+ *  
+ */

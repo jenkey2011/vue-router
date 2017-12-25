@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="../static/css/style.css">
+  <script charset="utf-8" src='../libs/js/vue.js'></script>
+<body>
+  <script src="https://cdn.jsdelivr.net/npm/tween.js@16.3.4"></script>
+  <div id="animated-number-demo">
+    <input v-model.number="number" type="number" step="20">
+    <p>{{ animatedNumber }}</p>
+  </div>
+
+  <script charset="utf-8">
+    new Vue({
+    el: '#animated-number-demo',
+    data: {
+      number: 0,
+      animatedNumber: 0
+    },
+    watch: {
+      number: function(newValue, oldValue) {
+        var vm = this
+        function animate () {
+          if (TWEEN.update()) {
+            requestAnimationFrame(animate)
+          }
+        }
+        new TWEEN.Tween({ tweeningNumber: oldValue })
+          .easing(TWEEN.Easing.Quadratic.Out)
+          .to({ tweeningNumber: newValue }, 500)
+          .onUpdate(function () {
+            vm.animatedNumber = this.tweeningNumber.toFixed(5)
+          })
+          .start()
+        animate()
+      }
+    }
+  })
+  </script>
+
+  <hr>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/tween.js@16.3.4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/color-js@1.0.3"></script>
+  <div id="example-7">
+    <input
+      v-model="colorQuery"
+      v-on:keyup.enter="updateColor"
+      placeholder="Enter a color"
+    >
+    <button v-on:click="updateColor">Update</button>
+    <p>Preview:</p>
+    <span
+      v-bind:style="{ backgroundColor: tweenedCSSColor }"
+      class="example-7-color-preview"
+    ></span>
+    <p>{{ tweenedCSSColor }}</p>
+  </div>
+  <style>
+    .example-7-color-preview {
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+    }
+  </style>
+  <script charset="utf-8">
+    var Color = net.brehaut.Color
+    new Vue({
+      el: '#example-7',
+      data: {
+        colorQuery: '',
+        color: {
+          red: 0,
+          green: 0,
+          blue: 0,
+          alpha: 1
+        },
+        tweenedColor: {}
+      },
+      created: function () {
+        this.tweenedColor = Object.assign({}, this.color)
+      },
+      watch: {
+        color: function () {
+          function animate () {
+            if (TWEEN.update()) {
+              requestAnimationFrame(animate)
+            }
+          }
+          new TWEEN.Tween(this.tweenedColor)
+            .to(this.color, 750)
+            .start()
+          animate()
+        }
+      },
+      computed: {
+        tweenedCSSColor: function () {
+          return new Color({
+            red: this.tweenedColor.red,
+            green: this.tweenedColor.green,
+            blue: this.tweenedColor.blue,
+            alpha: this.tweenedColor.alpha
+          }).toCSS()
+        }
+      },
+      methods: {
+        updateColor: function () {
+          this.color = new Color(this.colorQuery).toRGB()
+          this.colorQuery = ''
+        }
+      }
+    })
+  </script>
+
+  <hr>
+
+  <script src="https://cdn.jsdelivr.net/npm/tween.js@16.3.4"></script>
+  
+  <div id="example-8">
+    <input type="number" step='20' v-model.number="firstNumber"> + 
+    <input type="number" step='20' v-model.number="secondNumber"> = 
+    {{ result }} 
+
+    <p>
+      <animate-integer :value="firstNumber"></animate-integer> + 
+      <animate-integer :value="secondNumber"></animate-integer> =
+      <animate-integer :value="result"></animate-integer>
+    </p>
+
+  </div>
+  
+  <script charset="utf-8">
+    Vue.component('animate-integer',{
+      template:'<span>{{ tweeningVlaue }}</span>',
+      props:{
+        value: {
+          type: Number,
+          required: true
+        }
+      },
+      data:function(){
+        return {
+          tweeningVlaue: 0
+        }
+      },
+      watch: {
+        value: function(newValue,oldValue){
+          this.tween(oldValue,newValue)
+        }
+      },
+      mounted: function(){
+        this.tween(0,this.value);
+      },
+      methods:{
+        tween: function(startValue,endValue){
+          var vm = this;
+          function animate(){
+            if(TWEEN.update()){
+              requestAnimationFrame(animate)
+            }
+          }
+
+          new TWEEN.Tween({tweeningVlaue: startValue})
+            .to({ tweeningVlaue: endValue }, 500)
+            .onUpdate(function(){
+              vm.tweeningVlaue = this.tweeningVlaue.toFixed(0)
+            })
+            .start()
+
+            animate();
+
+        }
+      }
+    })
+
+
+    new Vue({
+      el:'#example-8',
+      data:{
+        firstNumber:20,
+        secondNumber:40
+      },
+      computed: {
+        result :function(){
+          return this.firstNumber + this.secondNumber;
+        }
+      }
+    })
+  </script>
+
+
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="../static/css/style.css">
+  <script charset="utf-8" src='../libs/js/vue.js'></script>
+</head>
+<body>
+  <div id="app">
+    <div :id='rawId | formatId'> 
+      {{ message | capitalize }}  
+    </div>
+    <div>
+      {{ message | upperCase }}
+    </div>
+    <div>
+      {{ message | headAndFoot("He says : \" " , "\" to vue!" ) }}
+    </div>
+    <div>
+      {{ message | filterA | filterB("!!!") }}
+    </div>
+  </div>
+  <script charset="utf-8">
+    var app = new Vue({
+    
+      el: "#app",
+      data:{
+        message:"hello world",
+        rawId:"myDiv"
+      },
+      filters: {
+        capitalize:function (value){
+          if(!value) return '';
+          value = value.toString();
+          return value.charAt(0).toUpperCase() + value.slice(1);
+        },
+        formatId:function(value){
+          return value.toString().toLowerCase();
+        },
+        upperCase:function(value){
+          return value.toUpperCase();
+        },
+        headAndFoot:function (value , head , foot){
+          return head + value + foot;
+        },
+        filterA:function(value){
+          value = value.split(" ");
+          var str = '';
+          for ( var i = 0 ; i<value.length ; i++){
+            str += value[i].charAt(0).toUpperCase() + value[i].slice(1) + " ";
+          }
+          return str;
+          // return 
+        },
+        filterB:function(value,arg){
+          return value + arg;
+        }
+      }
+    
+    })
+  </script>
+</body>
+</html>
