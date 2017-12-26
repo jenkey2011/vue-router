@@ -9,11 +9,27 @@
     <script src="../libs/js/vue.js"></script>
     <script src="../libs/js/vue-router.js"></script>
 </head>
-
+<style>
+    .fade-enter-active, .fade-leave-active {
+  transition: opacity .5s
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active in below version 2.1.8 */ {
+  opacity: 0
+}
+</style>
 <body>
     <div id="app">
-
-    </div>
+        <h1>Transitions</h1>
+        <ul>
+            <li><router-link to="/">/</router-link></li>
+            <li><router-link to="/parent">/parent</router-link></li>
+            <li><router-link to="/parent/foo">/parent/foo</router-link></li>
+            <li><router-link to="/parent/bar">/parent/bar</router-link></li>
+        </ul>
+        <transition name="fade" mode="out-in">
+            <router-view class="view"></router-view>
+        </transition>
+        </div>
     <script>
         const Home = {
             template: `
@@ -96,20 +112,6 @@
 
         new Vue({
             router,
-            template: `
-                <div id="app">
-                <h1>Transitions</h1>
-                <ul>
-                    <li><router-link to="/">/</router-link></li>
-                    <li><router-link to="/parent">/parent</router-link></li>
-                    <li><router-link to="/parent/foo">/parent/foo</router-link></li>
-                    <li><router-link to="/parent/bar">/parent/bar</router-link></li>
-                </ul>
-                <transition name="fade" mode="out-in">
-                    <router-view class="view"></router-view>
-                </transition>
-                </div>
-            `
         }).$mount('#app')
     </script>
 </body>
