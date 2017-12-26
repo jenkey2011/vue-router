@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../libs/js/vue.js"></script>
+    <script src="../libs/js/vue-router.js"></script>
+</head>
+
+<body>
+    <div id="app">
+
+    </div>
+    <script>
+        const Home = {
+            template: `
+                <div class="home">
+                <h2>Home</h2>
+                <p>hello</p>
+                </div>
+            `
+        }
+
+        const Parent = {
+            data() {
+                return {
+                    transitionName: 'slide-left'
+                }
+            },
+            // dynamically set transition based on route change
+            watch: {
+                '$route' (to, from) {
+                    const toDepth = to.path.split('/').length
+                    const fromDepth = from.path.split('/').length
+                    this.transitionName = toDepth < fromDepth ? 'slide-right' : 'slide-left'
+                }
+            },
+            template: `
+                <div class="parent">
+                <h2>Parent</h2>
+                <transition :name="transitionName">
+                    <router-view class="child-view"></router-view>
+                </transition>
+                </div>
+            `
+        }
+
+        const Default = {
+            template: '<div class="default">default</div>'
+        }
+        const Foo = {
+            template: '<div class="foo">foo</div>'
+        }
+        const Bar = {
+            template: '<div class="bar">bar</div>'
+        }
+
+        const router = new VueRouter({
+
+            routes: [{
+                    path: '/',
+                    component: Home
+                },
+                {
+                    path: '/parent',
+                    component: Parent,
+                    children: [{
+                            path: '',
+                            component: Default
+                        },
+                        {
+                            path: 'foo',
+                            component: Foo
+                        },
+                        {
+                            path: 'bar',
+                            component: Bar
+                        }
+                    ]
+                }
+            ]
+        })
+        
+    //    //  1.导语速度快,看不清  
+    //         >> 和王珂涵商量了一下，减速会显得卡顿
+    //             方案 >>> 动画播完后,保持静止2秒
+
+    //    //  2.跳动问题
+    //         >> 陆淩兴说 '前景'和'背景'改的很快
+    //             方案 >>> 陆淩兴改动静止部分，我把动画部分的问题解决
+
+    //     现在有个项目，明天上线，我帮雪松改一下。明天一早我就改画卷这个~
+
+        new Vue({
+            router,
+            template: `
+                <div id="app">
+                <h1>Transitions</h1>
+                <ul>
+                    <li><router-link to="/">/</router-link></li>
+                    <li><router-link to="/parent">/parent</router-link></li>
+                    <li><router-link to="/parent/foo">/parent/foo</router-link></li>
+                    <li><router-link to="/parent/bar">/parent/bar</router-link></li>
+                </ul>
+                <transition name="fade" mode="out-in">
+                    <router-view class="view"></router-view>
+                </transition>
+                </div>
+            `
+        }).$mount('#app')
+    </script>
+</body>
+
+
+
+
+</html>
